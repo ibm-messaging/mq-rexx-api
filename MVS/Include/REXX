@@ -1,1 +1,142 @@
-
+#pragma pack(1)
+ 
+#define FALSE 0
+#define TRUE  1
+ 
+#define APIENTRY
+typedef char *PSZ;
+ 
+/************************************************/
+/* Generated from macro IRXSHVB                 */
+/************************************************/
+ 
+#ifndef __shvblock__
+#define __shvblock__
+ 
+typedef struct shvblock_mvs_t {
+  void          *shvnext;   /* Chain pointer to next SHVBLOCK */
+  int            shvuser;   /* Used during "FETCH NEXT"       */
+  unsigned char  shvcode;   /* Function code - indicates type */
+  unsigned char  shvret;    /* Return codes                   */
+  short int      filler1;   /* Reserved (should be 0)         */
+  int            shvbufl;   /* Length of fetch value buffer   */
+  void          *shvnama;   /* Address of variable name       */
+  int            shvnaml;   /* Length of variable name        */
+  void          *shvvala;   /* Address of value buffer        */
+  int            shvvall;   /* Length of value buffer         */
+  } shvblock_mvs_t ;
+ 
+/* Values for field "shvcode" */
+#define shvblen  0x20       /* Length of SHVBLOCK              */
+#define shvfetch 0xC6       /* Copy value of shared variable   */
+#define shvstore 0xE2       /* Set variable from given value   */
+#define shvdropv 0xC4       /* Drop variable                   */
+#define shvsyfet 0x86       /* Symbolic name retrieve          */
+#define shvsyset 0xA2       /* Symbolic name set               */
+#define shvsydro 0x84       /* Symbolic name drop              */
+#define shvnextv 0xD5       /* Fetch "next" variable           */
+#define shvpriv  0xD7       /* Fetch private information       */
+/* Values for field "shvret" */
+#define shvclean 0x00       /* Execution was OK                */
+#define shvnewv  0x01       /* Variable did not exist          */
+#define shvlvar  0x02       /* Last variable transferred ("N") */
+#define shvtrunc 0x04       /* Truncation occurred for "Fetch" */
+#define shvbadn  0x08       /* Invalid variable name           */
+#define shvbadv  0x10       /* Invalid value specified         */
+#define shvbadf  0x80       /* Invalid function code (SHVCODE) */
+#define shvrcok  0x00       /* Entire Plist chain processed    */
+#define shvrcinv 0xFFFFFFFF /* Invalid entry conditions        */
+#define shvrcist 0xFFFFFFFE /* Insufficient storage available  */
+ 
+#endif
+ 
+ 
+/************************************************/
+/* Declarations for compatibility with WinREXX  */
+/************************************************/
+ 
+/***    Macros for RXSTRING manipulation                   */
+ 
+#define RXNULLSTRING(r)      (!(r).strptr)
+#define RXZEROLENSTRING(r)   ((r).strptr && !(r).strlength)
+#define RXVALIDSTRING(r)     ((r).strptr && (r).strlength)
+#define RXSTRLEN(r)          (RXNULLSTRING(r)?0L:(r).strlength)
+#define RXSTRPTR(r)          (r).strptr
+#define MAKERXSTRING(r,p,l)  {(r).strptr=(char*)p;(r).strlength=(unsigned int)l;}
+ 
+typedef struct  RXSTRING {                /* rxstr */
+        unsigned int strlength;           /*   length of string         */
+        char*        strptr;              /*   pointer to string        */
+} RXSTRING, *PRXSTRING;
+ 
+typedef struct SHVBLOCK {             /* shvb */
+    struct SHVBLOCK   *shvnext;       /* pointer to the next block   */
+    RXSTRING           shvname;       /* Pointer to the name buffer  */
+    RXSTRING           shvvalue;      /* Pointer to the value buffer */
+    unsigned int       shvnamelen;    /* Length of the name value    */
+    unsigned int       shvvaluelen;   /* Length of the fetch value   */
+    char               shvcode;       /* Function code for this block*/
+    char               shvret;        /* Individual Return Code Flags*/
+} SHVBLOCK;
+ 
+/***    Function Codes for Variable Pool Interface (shvcode) */
+ 
+#define RXSHV_SET          0x00       /* Set var from given value    */
+#define RXSHV_FETCH        0x01       /* Copy value of var to buffer */
+#define RXSHV_DROPV        0x02       /* Drop variable               */
+#define RXSHV_SYSET        0x03       /* Symbolic name Set variable  */
+#define RXSHV_SYFET        0x04       /* Symbolic name Fetch variable*/
+#define RXSHV_SYDRO        0x05       /* Symbolic name Drop variable */
+#define RXSHV_NEXTV        0x06       /* Fetch "next" variable       */
+#define RXSHV_PRIV         0x07       /* Fetch private information   */
+#define RXSHV_EXIT         0x08       /* Set function exit value     */
+ 
+/***    Return Codes for Variable Pool Interface */
+ 
+#define RXSHV_NOAVL         144       /* Interface not available     */
+ 
+/***    Return Code Flags for Variable Pool Interface (shvret) */
+ 
+#define RXSHV_OK           0x00       /* Execution was OK            */
+#define RXSHV_NEWV         0x01       /* Variable did not exist      */
+#define RXSHV_LVAR         0x02       /* Last var trans via SHVNEXTV */
+#define RXSHV_TRUNC        0x04       /* Truncation occurred-Fetch   */
+#define RXSHV_BADN         0x08       /* Invalid variable name       */
+#define RXSHV_MEMFL        0x10       /* Out of memory failure       */
+#define RXSHV_BADF         0x80       /* Invalid funct code (shvcode)*/
+ 
+/************************************************/
+/* Declarations for MVS REXX service functions  */
+/************************************************/
+ 
+FTYPE RXSAY (char*, int);
+FTYPE RXEXCOM (shvblock_mvs_t*);
+ 
+int RexxVariablePool(SHVBLOCK* sv1)
+  {
+    shvblock_mvs_t sv2;
+    int          sv2rc;
+ 
+    sv2.shvnext = 0;
+    sv2.shvuser = 0;
+    if (sv1->shvcode == RXSHV_SYSET) {
+       sv2.shvcode = shvsyset;
+       sv2.shvbufl = 0; }
+    if (sv1->shvcode == RXSHV_SYFET) {
+      sv2.shvcode = shvsyfet;
+      sv2.shvbufl = sv1->shvvaluelen; }
+    sv2.shvret = 0;
+    sv2.filler1 = 0;
+    sv2.shvnama = sv1->shvname.strptr;
+    sv2.shvnaml = sv1->shvnamelen;
+    sv2.shvvala = sv1->shvvalue.strptr;
+    sv2.shvvall = sv1->shvvaluelen;
+ 
+    sv2rc = RXEXCOM(&sv2);
+ 
+    sv1->shvret = sv2.shvret;
+    if (sv1->shvcode == RXSHV_SYFET) sv1->shvvalue.strlength = sv2.shvvall;
+    return (sv1->shvret);
+  }
+ 
+#pragma pack(reset)
