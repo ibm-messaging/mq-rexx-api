@@ -1,1 +1,78 @@
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<META name="GENERATOR" content="IBM WebSphere Studio Homepage Builder V6.0.2 for Windows">
+<META http-equiv="Content-Style-Type" content="text/css">
+<TITLE></TITLE>
+</HEAD>
+<BODY>
+<P>Here is the directry structure:<BR>
+MA95<BR>
+	\bin			- contains only z/OS &amp; win-32 executables<BR>
+	\doc			- currently empty, latest doc is sent in my previous note<BR>
+	\MVS			- z/OS specific parts<BR>
+		\ASM		- Assembler stub to implement REXX function pack<BR>
+		\Include	- REXX header<BR>
+		\JCL		- jobs to build MA95 and to run tests<BR>
+	\samples		- REXX samples/tests, self-documented<BR>
+	\src			- common sources for all platforms<BR>
+	\Windows		- Win/Unix specific code<BR>
+		\Compile	- compile command files for Win-32<BR>
+		\Runtests	- command files to run tests<BR>
+		\Util		- build RXMQCONS.h utility<BR>
+<BR>
+Note. These deliverables are compiled and tested on<BR>
+z/OS 1.13 + WMQ 7.0.1<BR>
+Windows XP + WMQ 7.5 + ooREXX 4.1.1 + gcc 4.4.7<BR>
+<BR>
+<BR>
+Additional information for new platforms:<BR>
+<BR>
+Linux:<BR>
+2.6.32-279.14.1.el6.x86_64 #1 SMP Wed Oct 31 13:23:23 CET 2012 x86_64 x86_64 x86_64 GNU/Linux<BR>
+<BR>
+gcc: <BR>
+gcc (GCC) 4.4.6 20120305 (Red Hat 4.4.6-4)<BR>
+Copyright (C) 2010 Free Software Foundation, Inc.<BR>
+<BR>
+MQ:<BR>
+Name:        WebSphere MQ<BR>
+Version:     7.5.0.0<BR>
+Level:       p000-L120604<BR>
+BuildType:   IKAP - (Production)<BR>
+Platform:    WebSphere MQ for Linux (x86-64 platform)<BR>
+Mode:        64-bit<BR>
+O/S:         Linux 2.6.32-279.14.1.el6.x86_64<BR>
+InstName:    Installation1<BR>
+InstDesc:    <BR>
+InstPath:    /opt/mqm<BR>
+DataPath:    /var/mqm<BR>
+Primary:     No<BR>
+MaxCmdLevel: 750<BR>
+<BR>
+REXX:<BR>
+Open Object Rexx Version 4.1.1<BR>
+Build date: May 21 2012<BR>
+Addressing Mode: 64<BR>
+<BR>
+Compile commands:<BR>
+gcc MA95.c -fPIC -m64 -shared -DOOREXX_COMPATIBILITY -D_RXMQN -DAPIENTRY= -I. -I/usr/include -I/opt/mqm/inc/ -L/usr/lib64/ooRexx -L. -L/opt/mqm/lib64 -lmqm -lrexx -lrexxapi -Wl,-M -Wall -olibRXMQN.so 2&gt;out<BR>
+gcc MA95.c -fPIC -m64 -shared -DOOREXX_COMPATIBILITY -D_RXMQT -DAPIENTRY= -I. -I/usr/include -I/opt/mqm/inc/ -L/usr/lib64/ooRexx -L. -L/opt/mqm/lib64 -lmqic -lrexx -lrexxapi -Wl,-M -Wall -olibRXMQT.so 2&gt;out<BR>
+<BR>
+<BR>
+AIX:<BR>
+IBM XL C/C++ for AIX, V11.1<BR>
+gcc version 4.2.0<BR>
+AIX 6.1 (6100-00-03-0808)<BR>
+Open Object Rexx Interpreter Version 3.2.0 for AIX<BR>
+WebSphere MQ Version:     7.0.1.0<BR>
+<BR>
+Compile commands 32-bit:<BR>
+gcc MA95.c -maix32 -O3 -shared -D_RXMQN -I. -I/opt/ooRexx/include/ -L/opt/ooRexx/lib/ooRexx -lmqm -lrexxapi -lrexx -Wl,-M -o libRXMQN.so<BR>
+/usr/vacpp/bin/gxlc MA95.c -maix32 -O3 -fsigned-char -trigraphs -shared -D_RXMQN -I. -I/opt/ooRexx/include/ -L/opt/ooRexx/lib/ooRexx -lpthread -lmqm -lrexxapi -lrexx -Wl,-M -o libRXMQN.so<BR>
+Compile commands 64-bit:<BR>
+gcc MA95.c -maix64 -O3 -shared -D_RXMQN -I. -I/opt/ooRexx/include/ -L/opt/ooRexx/lib/ooRexx -L/usr/mqm/lib64 -lmqm -lrexxapi -lrexx -Wl,-M -o libRXMQN.so <BR>
+/usr/vacpp/bin/gxlc MA95.c -maix64 -O3 -shared -D_RXMQN -I. -I/opt/ooRexx/include/ -L/opt/ooRexx/lib/ooRexx -L/usr/mqm/lib64 -lmqm -lrexxapi -lrexx -Wl,-M -o libRXMQN.so</P>
+</BODY>
+</HTML>
