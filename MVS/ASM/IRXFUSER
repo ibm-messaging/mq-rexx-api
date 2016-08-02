@@ -1,1 +1,564 @@
-
+IRXFUSER TITLE 'USER REXX FUNCTION PACKAGE DIRECTORY'                   00010029
+*********************************************************************** 00020029
+* WebSphere MQ Support Pac MA95 - REXX support for z/OS and Windows   * 00030029
+* (C) Copyright IBM Corporation 2009                                  * 00040029
+*********************************************************************** 00050029
+*********************************************************************** 00060029
+* !!!!!!!! Use Assembler BATCH option for this file !!!!!!!!!!!!!!!!! * 00070029
+*********************************************************************** 00080029
+IRXFUSER CSECT                                                          00090029
+IRXFUSER AMODE 31                                                       00100029
+IRXFUSER RMODE ANY                                                      00110029
+HEADER   DC    CL8'IRXFPACK'       STRING IDENTIFYING DIRECTORY         00120029
+         DC    A(ENTRIES-HEADER)   LENGTH OF HEADER                     00130029
+         DC    A((END-ENTRIES)/32) NUMBER OF ROWS IN DIRECTORY          00140029
+         DC    F'0'                WORD OF ZEROS                        00150029
+         DC    A(FPCKDIR_NEXT-FPCKDIR_ENTRY)  LENGTH OF DIRECTORY ENTRY 00160029
+*                                                                       00170029
+ENTRIES  EQU   *                                                        00180029
+*                                                                       00190029
+         DC    CL8'RXMQINIT'    Name used in EXEC                       00200029
+         DC    V(RXMQINIT)      Address of preloaded code               00210029
+         DC    F'0'             Reserved                                00220029
+         DC    CL8' '           Name of entry point                     00230029
+         DC    CL8' '           DD from which to load entry point       00240029
+*                                                                       00250029
+         DC    CL8'RXMQTERM'                                            00260029
+         DC    V(RXMQTERM)                                              00270029
+         DC    F'0'                                                     00280029
+         DC    CL8' '                                                   00290029
+         DC    CL8' '                                                   00300029
+*                                                                       00310029
+         DC    CL8'RXMQCONS'                                            00320029
+         DC    V(RXMQCONS)                                              00330029
+         DC    F'0'                                                     00340029
+         DC    CL8' '                                                   00350029
+         DC    CL8' '                                                   00360029
+*                                                                       00370029
+         DC    CL8'RXMQCONN'                                            00380029
+         DC    V(RXMQCONN)                                              00390029
+         DC    F'0'                                                     00400029
+         DC    CL8' '                                                   00410029
+         DC    CL8' '                                                   00420029
+*                                                                       00430029
+         DC    CL8'RXMQOPEN'                                            00440029
+         DC    V(RXMQOPEN)                                              00450029
+         DC    F'0'                                                     00460029
+         DC    CL8' '                                                   00470029
+         DC    CL8' '                                                   00480029
+*                                                                       00490029
+         DC    CL8'RXMQCLOS'                                            00500029
+         DC    V(RXMQCLOS)                                              00510029
+         DC    F'0'                                                     00520029
+         DC    CL8' '                                                   00530029
+         DC    CL8' '                                                   00540029
+*                                                                       00550029
+         DC    CL8'RXMQDISC'                                            00560029
+         DC    V(RXMQDISC)                                              00570029
+         DC    F'0'                                                     00580029
+         DC    CL8' '                                                   00590029
+         DC    CL8' '                                                   00600029
+*                                                                       00610029
+         DC    CL8'RXMQCMIT'                                            00620029
+         DC    V(RXMQCMIT)                                              00630029
+         DC    F'0'                                                     00640029
+         DC    CL8' '                                                   00650029
+         DC    CL8' '                                                   00660029
+*                                                                       00670029
+         DC    CL8'RXMQBACK'                                            00680029
+         DC    V(RXMQBACK)                                              00690029
+         DC    F'0'                                                     00700029
+         DC    CL8' '                                                   00710029
+         DC    CL8' '                                                   00720029
+*                                                                       00730029
+         DC    CL8'RXMQPUT '                                            00740029
+         DC    V(RXMQPUT)                                               00750029
+         DC    F'0'                                                     00760029
+         DC    CL8' '                                                   00770029
+         DC    CL8' '                                                   00780029
+*                                                                       00790029
+         DC    CL8'RXMQPUT1'                                            00800029
+         DC    V(RXMQPUT1)                                              00810029
+         DC    F'0'                                                     00820029
+         DC    CL8' '                                                   00830029
+         DC    CL8' '                                                   00840029
+*                                                                       00850029
+         DC    CL8'RXMQGET '                                            00860029
+         DC    V(RXMQGET)                                               00870029
+         DC    F'0'                                                     00880029
+         DC    CL8' '                                                   00890029
+         DC    CL8' '                                                   00900029
+*                                                                       00910029
+         DC    CL8'RXMQINQ '                                            00920029
+         DC    V(RXMQINQ)                                               00930029
+         DC    F'0'                                                     00940029
+         DC    CL8' '                                                   00950029
+         DC    CL8' '                                                   00960029
+*                                                                       00970029
+         DC    CL8'RXMQSET '                                            00980029
+         DC    V(RXMQSET)                                               00990029
+         DC    F'0'                                                     01000029
+         DC    CL8' '                                                   01010029
+         DC    CL8' '                                                   01020029
+*                                                                       01030029
+         DC    CL8'RXMQSUB '                                            01040029
+         DC    V(RXMQSUB)                                               01050029
+         DC    F'0'                                                     01060029
+         DC    CL8' '                                                   01070029
+         DC    CL8' '                                                   01080029
+*                                                                       01090029
+         DC    CL8'RXMQBRWS'                                            01100029
+         DC    V(RXMQBRWS)                                              01110029
+         DC    F'0'                                                     01120029
+         DC    CL8' '                                                   01130029
+         DC    CL8' '                                                   01140029
+*                                                                       01150029
+         DC    CL8'RXMQHXT '                                            01160029
+         DC    V(RXMQHXT)                                               01170029
+         DC    F'0'                                                     01180029
+         DC    CL8' '                                                   01190029
+         DC    CL8' '                                                   01200029
+*                                                                       01210029
+         DC    CL8'RXMQEVNT'                                            01220029
+         DC    V(RXMQEVNT)                                              01230029
+         DC    F'0'                                                     01240029
+         DC    CL8' '                                                   01250029
+         DC    CL8' '                                                   01260029
+*                                                                       01270029
+         DC    CL8'RXMQTM  '                                            01280029
+         DC    V(RXMQTM)                                                01290029
+         DC    F'0'                                                     01300029
+         DC    CL8' '                                                   01310029
+         DC    CL8' '                                                   01320029
+*                                                                       01330029
+         DC    CL8'RXMQC   '                                            01340029
+         DC    V(RXMQC)                                                 01350029
+         DC    F'0'                                                     01360029
+         DC    CL8' '                                                   01370029
+         DC    CL8' '                                                   01380029
+*                                                                       01390029
+         DC    CL8'RXMQV  '                                             01400029
+         DC    V(RXMQV)                                                 01410029
+         DC    F'0'                                                     01420029
+         DC    CL8' '                                                   01430029
+         DC    CL8' '                                                   01440029
+*                                                                       01450029
+         DC    CL8'RXMQVC  '                                            01460029
+         DC    V(RXMQVC)                                                01470029
+         DC    F'0'                                                     01480029
+         DC    CL8' '                                                   01490029
+         DC    CL8' '                                                   01500029
+*                                                                       01510029
+END      EQU   *                                                        01520029
+*                                                                       01530029
+         IRXFPDIR       REXX function package mapping macro             01540029
+         END   IRXFUSER                                                 01550029
+*********************************************************************** 01560029
+*        Collection of C++ stubs for MQ API calls                     * 01570029
+*********************************************************************** 01580029
+CCSTUBS  TITLE 'C++ program call stubs'                                 01590029
+CCSTUBS  CSECT                                                          01600029
+CCSTUBS  AMODE 31                                                       01610029
+CCSTUBS  RMODE ANY                                                      01620029
+         ENTRY SAVEEB                                                   01630029
+         ENTRY RXMQINIT                                                 01640029
+         ENTRY RXMQTERM                                                 01650029
+         ENTRY RXMQCONS                                                 01660029
+         ENTRY RXMQCONN                                                 01670029
+         ENTRY RXMQOPEN                                                 01680029
+         ENTRY RXMQCLOS                                                 01690029
+         ENTRY RXMQDISC                                                 01700029
+         ENTRY RXMQCMIT                                                 01710029
+         ENTRY RXMQBACK                                                 01720029
+         ENTRY RXMQPUT                                                  01730029
+         ENTRY RXMQPUT1                                                 01740029
+         ENTRY RXMQGET                                                  01750029
+         ENTRY RXMQINQ                                                  01760029
+         ENTRY RXMQSET                                                  01770029
+         ENTRY RXMQSUB                                                  01780029
+         ENTRY RXMQBRWS                                                 01790029
+         ENTRY RXMQHXT                                                  01800029
+         ENTRY RXMQEVNT                                                 01810029
+         ENTRY RXMQTM                                                   01820029
+         ENTRY RXMQC                                                    01830029
+         ENTRY RXMQV                                                    01840029
+         ENTRY RXMQVC                                                   01850029
+RXMQINIT J     CCENTRY                                                  01860029
+RXMQTERM J     CCENTRY                                                  01870029
+RXMQCONS J     CCENTRY                                                  01880029
+RXMQCONN J     CCENTRY                                                  01890029
+RXMQOPEN J     CCENTRY                                                  01900029
+RXMQCLOS J     CCENTRY                                                  01910029
+RXMQDISC J     CCENTRY                                                  01920029
+RXMQCMIT J     CCENTRY                                                  01930029
+RXMQBACK J     CCENTRY                                                  01940029
+RXMQPUT  J     CCENTRY                                                  01950029
+RXMQPUT1 J     CCENTRY                                                  01960029
+RXMQGET  J     CCENTRY                                                  01970029
+RXMQINQ  J     CCENTRY                                                  01980029
+RXMQSET  J     CCENTRY                                                  01990029
+RXMQSUB  J     CCENTRY                                                  02000029
+RXMQBRWS J     CCENTRY                                                  02010029
+RXMQHXT  J     CCENTRY                                                  02020029
+RXMQEVNT J     CCENTRY                                                  02030029
+RXMQTM   J     CCENTRY                                                  02040029
+RXMQC    J     CCENTRY                                                  02050029
+RXMQV    J     CCENTRY                                                  02060029
+RXMQVC   J     CCENTRY                                                  02070029
+*                                                                       02080029
+CCENTRY  STM   14,12,12(13)  Save caller's registers                    02090029
+         CNOP  0,4           Ensure no gaps after JAS                   02100029
+         JAS   12,*+8        Branch around constant                     02110029
+         DC    A(CCSTUBS)    @ CSECT                                    02120029
+         L     12,0(,12)     Load @ CSECT                               02130029
+         USING CCSTUBS,12                                               02140029
+         LA    15,0(,15)     Get rid of high order bit                  02150029
+         SR    15,12         Called entry offset                        02160029
+         SRL   15,2          Called entry index                         02170029
+         ST    15,PTBINDEX   Save for later router call                 02180029
+*                                                                       02190029
+         LA    15,CCSAVE     @ of new savearea                          02200029
+         ST    13,4(15)      Back-chain the save area                   02210029
+         ST    15,8(13)      Forward-chain in caller's save area        02220029
+         LR    13,15         R13 = @ current save area                  02230029
+*---------------------------------------------------------------------* 02240029
+*        Now try to retrieve TCB-related user token.                  * 02250029
+*        If it doesn't exist, init C++ environment and create it.     * 02260029
+*        If exists, use already created C++ environment.              * 02270029
+*---------------------------------------------------------------------* 02280029
+         CALL  IEANTRT,(LEVEL,USERNAME,USERTOK,RETCODE)                 02290029
+         LA    2,IEANT_OK    Make 0 for comparison                      02300029
+         C     2,RETCODE     Was environment initialized previously ?   02310029
+         JE    CSUB          Yes                                        02320029
+         LA    2,IEANT_NOT_FOUND                                        02330029
+         C     2,RETCODE     Not initialized ?                          02340029
+         JE    LOADPIPI      Go, init                                   02350029
+         ABEND (2),DUMP                                                 02360029
+*                                                                       02370029
+LOADPIPI LOAD  EP=RXMQINIT   Load myself to make us resident            02380029
+*                                                                       02390029
+         LOAD  EP=CEEPIPI    Load CEEPIPI routine dynamically           02400029
+         ST    0,CCINIPTR    Save CEEPIPI address                       02410029
+*                                                                       02420029
+         LR    15,0          Get CEEPIPI address                        02430029
+         LA    1,INITPL      @ INIT plist for CEEPIPI                   02440029
+         BALR  14,15         Invoke CEEPIPI INIT                        02450029
+         LTR   2,15          Check return code                          02460029
+         JZ    CRETOK        If zero, create user token                 02470029
+         ABEND (2),DUMP      Abend with bad RC and dump memory          02480029
+*                                                                       02490029
+CRETOK   DS    0H                                                       02500029
+         CALL  IEANTCR,(LEVEL,USERNAME,USERTOK,PERSOPT,RETCODE)         02510029
+         LA    2,IEANT_OK    Make 0 for comparison                      02520029
+         C     2,RETCODE     Was create successful ?                    02530029
+         JE    CSUB          Yes                                        02540029
+         ABEND (2),DUMP                                                 02550029
+*                                                                       02560029
+CSUB     DS    0H                                                       02570029
+*---------------------------------------------------------------------* 02580029
+*        All REXX external functions have the following regs passed:  * 02590029
+*        R0 = @ Environment Block                                     * 02600029
+*        R1 = @ External Function Parameter List                      * 02610029
+*                                                                     * 02620029
+*        @ envblock is saved for later calls to REXX services         * 02630029
+*        It is not passed to C++ routines                             * 02640029
+*                                                                     * 02650029
+*        efpl content is used to create C++ plist in the form:        * 02660029
+*        RXMQ... (PSZ       afuncname,  // ptr to REXX func name      * 02670029
+*                 LONG      aargc,      // number of parms            * 02680029
+*                 RXSTRING  aargv  ,    // parms                      * 02690029
+*                 PSZ       aqname,     // REXX queue name            * 02700029
+*                 PRXSTRING aretstr)    // return string              * 02710029
+*        afuncname & aqname are currently not used                    * 02720029
+*                                                                     * 02730029
+*---------------------------------------------------------------------* 02740029
+         L     1,4(,13)                @ previous savearea              02750029
+         L     0,20(,1)                REXX R0 = @ envblock             02760029
+         ST    0,SAVEEB                save @ envblock for REXX srvc    02770029
+*                                                                       02780029
+         L     15,PTBINDEX             entry index                      02790029
+         SLL   15,4                    * 16 = entry length              02800029
+         LA    15,PPTBL+24(15)         @ entry name                     02810029
+         MVC   FUNCNAME(8),0(15)       -> C++ plist                     02820029
+*                                                                       02830029
+         L     1,24(,1)                REXX R1 = @ efpl                 02840029
+         USING EFPL,1                                                   02850029
+         L     15,EFPLEVAL             @ @ evalblock                    02860029
+         L     15,0(,15)               @ evalblock                      02870029
+         USING EVALBLOCK,15                                             02880029
+         MVC   RXSTRL,EVALBLOCK_EVLEN  initialize retstr length         02890029
+         LA    0,EVALBLOCK_EVDATA      @ string                         02900029
+         ST    0,RXSTR@                -> plist                         02910029
+         DROP  15                                                       02920029
+*                                                                       02930029
+         L     1,EFPLARG               @ argtable                       02940029
+         DROP  1                                                        02950029
+         USING ARGTABLE_ENTRY,1                                         02960029
+         SR    14,14                   arg count                        02970029
+         LA    15,ARGV                 arg copy ptr                     02980029
+ARGLOOP  CLC   ARGTABLE_END,0(1)       end of table ?                   02990029
+         JE    CALLPIPI                Yes                              03000029
+         MVC   0(4,15),ARGTABLE_ARGSTRING_LENGTH                        03010029
+         MVC   4(4,15),ARGTABLE_ARGSTRING_PTR                           03020029
+         LA    14,1(,14)               # args + 1                       03070029
+         LA    15,8(,15)                                                03080029
+         LA    1,ARGTABLE_NEXT         @ next entry                     03090029
+         J     ARGLOOP                 scan passed argtable             03100029
+*                                                                       03110029
+CALLPIPI DS    0H                                                       03120029
+         ST    14,ARGC                 # arguments                      03130029
+         L     15,CCINIPTR   @ CEEPIPI                                  03140029
+         LA    1,CALLPL      @ CALL plist for CEEPIPI                   03150029
+         BALR  14,15         Invoke CEEPIPI CALL                        03160029
+         LTR   2,15          Check return code                          03170029
+         JZ    CALLDONE      If zero, exit                              03180029
+         ABEND (2),DUMP      Abend with bad RC and dump memory          03190029
+*                                                                       03200029
+CALLDONE DS    0H                                                       03210029
+         L     1,4(,13)      @ prev savearea                            03220029
+         L     1,24(,1)      REXX R1 = @ efpl                           03230029
+         USING EFPL,1                                                   03240029
+         L     15,EFPLEVAL   @ @ evalblock                              03250029
+         DROP  1                                                        03260029
+         L     15,0(,15)     @ evalblock                                03270029
+         USING EVALBLOCK,15                                             03280029
+         L     1,RXSTRL      retstr length                              03290029
+         LTR   1,1           any value returned ?                       03300029
+         JNP   TERM          No                                         03310029
+         ST    1,EVALBLOCK_EVLEN length -> evalblock                    03320029
+         BCTR  1,0                                                      03330029
+         L     14,RXSTR@     @ retstr                                   03340029
+         LA    15,EVALBLOCK_EVDATA  @ string in evalblock               03350029
+         DROP  15                                                       03360029
+         MVC   0(*-*,15),0(14)                                          03370029
+         EX    1,*-6                                                    03380029
+*                                                                       03390029
+TERM     DS    0H                                                       03400029
+         LA    2,4                                                      03410029
+         C     2,SUBRETC     Is it TERM call ?                          03420029
+         JNE   RC0           No                                         03430029
+*                                                                       03440029
+         L     15,CCINIPTR   @ CEEPIPI                                  03450029
+         LA    1,TERMPL      @ TERM plist for CEEPIPI                   03460029
+         BALR  14,15         Invoke CEEPIPI TERM                        03470029
+         LTR   2,15          Check return code                          03480029
+         JZ    DELETE        If zero, delete CEEPIPI                    03490029
+         ABEND (2),DUMP      Abend with bad RC and dump memory          03500029
+*                                                                       03510029
+DELETE   DS    0H                                                       03520029
+         DELETE EP=RXMQINIT  Decrease my own load count                 03530029
+*                                                                       03540029
+         DELETE EP=CEEPIPI   Delete CEEPIPI from memory                 03550029
+         ST    2,CCINIPTR    Clear EP address                           03560029
+*                                                                       03570029
+         CALL  IEANTDL,(LEVEL,USERNAME,RETCODE)   Delete user token     03580029
+         LA    2,IEANT_OK    Make 0 for comparison                      03590029
+         C     2,RETCODE     Was create successful ?                    03600029
+         JE    RC0           Yes                                        03610029
+         ABEND (2),DUMP                                                 03620029
+*                                                                       03630029
+RC0      LA    15,0          Return code = 0                            03640029
+DONE     L     13,4(13)      Get address of caller's save area          03650029
+         L     14,12(13)     Get return address                         03660029
+         LM    0,12,20(13)   Restore caller's registers                 03670029
+         BR    14            Branch back to caller                      03680029
+*                                                                       03690029
+CCSAVE   DC    18F'0'        Our savearea                               03700029
+*        Parms for user token interface                                 03710029
+LEVEL    DC    A(IEANT_TASK_LEVEL)      TCB-related token               03720029
+USERNAME DC    CL16'MA95 SUPPORT PACK' User token name                  03730029
+USERTOK  DC    0F                       User token value (4 words)      03740029
+CCINIPTR DC    A(0)          @ CEEPIPI                                  03750029
+TOKEN    DC    F'0'          Token received from INIT                   03760029
+         DC    2A(0)         reserved                                   03770029
+PERSOPT  DC    A(IEANT_NOPERSIST)       No checkpoint/restart permitted 03780029
+RETCODE  DC    F'0'                     Return code                     03790029
+*                                                                       03800029
+CCPARM   DS    0F            Plist passed to C++ functions              03810029
+         DC    A(FUNCNAME)   @ REXX function name                       03820029
+ARGC     DC    A(0)          @ argc                                     03830029
+         DC    A(ARGV)       @ argv                                     03840029
+         DC    A(0)          @ qname (dummy)                            03850029
+         DC    A(@RXSTR)     @ RXSTRING retstr                          03860029
+@RXSTR   DC    0F            This is struct RXSTRING                    03870029
+RXSTRL   DC    F'0'          retstr length                              03880029
+RXSTR@   DC    A(0)          retstr ptr                                 03890029
+*                                                                       03900029
+ARGV     DC    20A(0)        space for 10 arguments                     03910029
+SAVEEB   DC    F'0'          @ REXX Environment block                   03920029
+*                                                                       03930029
+CALLPL   DS    0F            Plist passed to CEEPIPI for CALL func      03940029
+         DC    A(CALLSUB)                                               03950029
+         DC    A(PTBINDEX)                                              03960029
+         DC    A(TOKEN)                                                 03970029
+         DC    A(PARMPTR)                                               03980029
+         DC    A(SUBRETC)                                               03990029
+         DC    A(SUBRSNC)                                               04000029
+         DC    A(SUBFBC)                                                04010029
+CALLSUB  DC    F'4'          call_sub code                              04020029
+PTBINDEX DC    F'0'          CEEXPTBL index for RXMQINIT                04030029
+FUNCNAME DC    XL12'00'      For function name                          04040029
+PARMPTR  DC    A(CCPARM)     @ plist passed to C++ function             04050029
+SUBRETC  DS    F             Function return code                       04060029
+SUBRSNC  DS    F             Function reason code                       04070029
+SUBFBC   DS    3F            Function feedback code                     04080029
+*                                                                       04090029
+INITPL   DS    0F            Plist passed to CEEPIPI for INIT func      04100029
+         DC    A(INITSUB)                                               04110029
+         DC    A(@CEXPTBL)                                              04120029
+         DC    A(@SRVRTNS)                                              04130029
+         DC    A(RUNTMOPT)                                              04140029
+         DC    A(TOKEN)                                                 04150029
+INITSUB  DC    F'9'          init_sub_dp code                           04160030
+@CEXPTBL DC    A(PPTBL)      @ CEEXPTBL                                 04170029
+@SRVRTNS DC    A(0)          @ service routine vector                   04180029
+*                            LE Run-time options:                       04190029
+*UNTMOPT DC    CL255' '                no options                       04200029
+RUNTMOPT DC    CL255'TRAP(OFF,NOSPIE)' turn off exception processing    04210029
+*                                                                       04220029
+TERMPL   DS    0F            Plist passed to CEEPIPI for TERM func      04230029
+         DC    A(TERMSUB)                                               04240029
+         DC    A(TOKEN)                                                 04250029
+         DC    A(ENV_RC)                                                04260029
+TERMSUB  DC    F'5'          term code                                  04270029
+ENV_RC   DC    F'0'          Return code                                04280029
+*---------------------------------------------------------------------* 04290029
+*        Preinitialization table                                        04300029
+*        Attention! Table entries should be in the same order           04310029
+*        as CCSTUBS entry points                                        04320029
+*---------------------------------------------------------------------* 04330029
+         EXTRN CPPMINIT                                                 04340029
+         EXTRN CPPMTERM                                                 04350029
+         EXTRN CPPMCONS                                                 04360029
+         EXTRN CPPMCONN                                                 04370029
+         EXTRN CPPMOPEN                                                 04380029
+         EXTRN CPPMCLOS                                                 04390029
+         EXTRN CPPMDISC                                                 04400029
+         EXTRN CPPMCMIT                                                 04410029
+         EXTRN CPPMBACK                                                 04420029
+         EXTRN CPPMPUT                                                  04430029
+         EXTRN CPPMPUT1                                                 04440029
+         EXTRN CPPMGET                                                  04450029
+         EXTRN CPPMINQ                                                  04460029
+         EXTRN CPPMSET                                                  04470029
+         EXTRN CPPMSUB                                                  04480029
+         EXTRN CPPMBRWS                                                 04490029
+         EXTRN CPPMHXT                                                  04500029
+         EXTRN CPPMEVNT                                                 04510029
+         EXTRN CPPMTM                                                   04520029
+         EXTRN CPPMC                                                    04530029
+         EXTRN CPPMV                                                    04540029
+         EXTRN CPPMVC                                                   04550029
+*                 1st parameter below is not used                       04560029
+PPTBL    CEEXPIT                                                        04570029
+         CEEXPITY RXMQINIT,CPPMINIT+X'80000000'                         04580029
+         CEEXPITY RXMQTERM,CPPMTERM+X'80000000'                         04590029
+         CEEXPITY RXMQCONS,CPPMCONS+X'80000000'                         04600029
+         CEEXPITY RXMQCONN,CPPMCONN+X'80000000'                         04610029
+         CEEXPITY RXMQOPEN,CPPMOPEN+X'80000000'                         04620029
+         CEEXPITY RXMQCLOS,CPPMCLOS+X'80000000'                         04630029
+         CEEXPITY RXMQDISC,CPPMDISC+X'80000000'                         04640029
+         CEEXPITY RXMQCMIT,CPPMCMIT+X'80000000'                         04650029
+         CEEXPITY RXMQBACK,CPPMBACK+X'80000000'                         04660029
+         CEEXPITY RXMQPUT,CPPMPUT+X'80000000'                           04670029
+         CEEXPITY RXMQPUT1,CPPMPUT1+X'80000000'                         04680029
+         CEEXPITY RXMQGET,CPPMGET+X'80000000'                           04690029
+         CEEXPITY RXMQINQ,CPPMINQ+X'80000000'                           04700029
+         CEEXPITY RXMQSET,CPPMSET+X'80000000'                           04710029
+         CEEXPITY RXMQSUB,CPPMSUB+X'80000000'                           04720029
+         CEEXPITY RXMQBRWS,CPPMBRWS+X'80000000'                         04730029
+         CEEXPITY RXMQHXT,CPPMHXT+X'80000000'                           04740029
+         CEEXPITY RXMQEVNT,CPPMEVNT+X'80000000'                         04750029
+         CEEXPITY RXMQTM,CPPMTM+X'80000000'                             04760029
+         CEEXPITY RXMQC,CPPMC+X'80000000'                               04770029
+         CEEXPITY RXMQV,CPPMV+X'80000000'                               04780029
+         CEEXPITY RXMQVC,CPPMVC+X'80000000'                             04790029
+         CEEXPITS                                                       04800029
+*                                                                       04810029
+         LTORG                                                          04820029
+         DROP  12                                                       04830029
+*                                                                       04840029
+         IRXARGTB DECLARE=YES                                           04850029
+         IRXEFPL                                                        04860029
+         IRXEVALB                                                       04870029
+         IEANTASM                                                       04880029
+         END   CCSTUBS                                                  04890029
+*********************************************************************** 04900029
+*        extern "OS" int RXSAY (char*, int);                          * 04910029
+*********************************************************************** 04920029
+RXSAY    TITLE 'Assembler stub for REXX IRXSAY function'                04930029
+RXSAY    CSECT                                                          04940029
+RXSAY    AMODE 31                                                       04950029
+RXSAY    RMODE ANY                                                      04960029
+         EDCPRLG                                                        04970029
+*                                                                       04980029
+         L     15,@SAVEEB    @ @ Envblock                               04990029
+         L     15,0(,15)     @ Envblock                                 05000029
+         MVC   @SAYSTR,0(1)  @ string                                   05010029
+         L     1,4(,1)       @ length                                   05020029
+         LA    1,0(,1)       clear high order bit                       05030029
+         ST    1,PLSAY+8     @ length -> plist                          05040029
+         LA    1,PLSAY       @ plist for IRXSAY                         05050029
+         USING ENVBLOCK,15                                              05060029
+         L     15,ENVBLOCK_IRXEXTE     @ Irxexte                        05070029
+         DROP  15                                                       05080029
+         USING IRXEXTE,15                                               05090029
+         L     15,IRXSAY               @ IRXSAY                         05100029
+         DROP  15                                                       05110029
+         BALR  14,15                                                    05120029
+*                                                                       05130029
+         EDCEPIL                                                        05140029
+*                                                                       05150029
+PLSAY    DS    0F                                                       05160029
+         DC    A(FNNAME)     @ 'WRITE'                                  05170029
+         DC    A(@SAYSTR)    @ @ string                                 05180029
+         DC    A(0)          @ length                                   05190029
+@SAVEEB  DC    V(SAVEEB)     @ envblock                                 05200029
+         DC    A(RETCODE+X'80000000')                                   05210029
+FNNAME   DC    CL8'WRITE'                                               05220029
+@SAYSTR  DC    A(0)          @ string                                   05230029
+RETCODE  DC    F'0'                                                     05240029
+*                                                                       05250029
+         LTORG                                                          05260029
+         IRXENVB             Environment block                          05270029
+         IRXEXTE             External Entry Points                      05280029
+         END                                                            05290029
+*********************************************************************** 05300029
+*        extern "OS" int RXEXCOM (struct shvblock_mvs_t*);            * 05310029
+*********************************************************************** 05320029
+RXEXCOM  TITLE 'Assembler stub for REXX IRXEXCOM function'              05330029
+RXEXCOM  CSECT                                                          05340029
+RXEXCOM  AMODE 31                                                       05350029
+RXEXCOM  RMODE ANY                                                      05360029
+         EDCPRLG                                                        05370029
+*                                                                       05380029
+         L     15,@SAVEEB    @ @ Envblock                               05390029
+         L     15,0(15)      @ Envblock                                 05400029
+         L     1,0(,1)       @ Shvblock                                 05410029
+         LA    1,0(,1)       clear high order bit                       05420029
+         ST    1,PLEXCOM+12  @ Shvblock -> plist                        05430029
+         LA    1,PLEXCOM     @ plist for IRXEXCOM                       05440029
+         USING ENVBLOCK,15                                              05450029
+         L     15,ENVBLOCK_IRXEXTE     @ Irxexte                        05460029
+         DROP  15                                                       05470029
+         USING IRXEXTE,15                                               05480029
+         L     15,IRXEXCOM             @ IRXEXCOM                       05490029
+         DROP  15                                                       05500029
+         BALR  14,15                                                    05510029
+*                                                                       05520029
+         EDCEPIL                                                        05530029
+*                                                                       05540029
+PLEXCOM  DS    0F                                                       05550029
+         DC    A(EXNAME)     @ 'IRXEXCOM'                               05560029
+         DC    A(0)          must be 0                                  05570029
+         DC    A(0)          must be 0                                  05580029
+         DC    A(0)          @ MVS shvblock                             05590029
+@SAVEEB  DC    V(SAVEEB)     @ envblock                                 05600029
+         DC    A(RETCODE+X'80000000')                                   05610029
+EXNAME   DC    CL8'IRXEXCOM'                                            05620029
+RETCODE  DC    F'0'                                                     05630029
+*                                                                       05640029
+         LTORG                                                          05650029
+         IRXENVB             Environment block                          05660029
+         IRXEXTE             External Entry Points                      05670029
+         END                                                            05680029
