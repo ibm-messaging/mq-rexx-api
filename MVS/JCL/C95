@@ -1,0 +1,23 @@
+//MA99C    JOB   EEA,GO,MSGCLASS=H,MSGLEVEL=(0,0),REGION=0M             00010000
+//*                                                                     00011007
+//**************** THIS JOB COMPILES               ***************/     00012007
+//**************** C REXX INTERFACE                ***************/     00013007
+//**************** FOR NEW MA95 SUPPORT PACK       ***************/     00014007
+//*                                                                     00015007
+//C        EXEC PGM=CCNDRVR,                                            00020000
+//  PARM=('/CSECT,SOURCE,LIST,XREF,SS',                                 00030000
+//*       'SHOWINC',                                                    00030100
+//        'EXPMAC',                                                     00030300
+//        'LONGNAME,NOOPT',                                             00030400
+//        'LANGLVL(STDC99)',                                            00030506
+//        'SEARCH(DD:SYSLIBV)')                                         00030606
+//SYSLIBV  DD DISP=SHR,DSN=WMQ.MA99.C                                   00061000
+//SYSLIB   DD DISP=SHR,DSN=CSQ701.SCSQC370                              00062002
+//SYSLIN   DD DISP=SHR,DSN=WMQ.MA99.OBJ(MA95)                           00070005
+//SYSPRINT DD SYSOUT=*                                                  00080000
+//SYSOUT   DD SYSOUT=*                                                  00090000
+//SYSCPRT  DD SYSOUT=*                                                  00100000
+//SYSUT1   DD SPACE=(1700,(400,400)),UNIT=VIO                           00110000
+//SYSUT2   DD SPACE=(1700,(400,400)),UNIT=VIO                           00120000
+//SYSUT3   DD SPACE=(1700,(400,400)),UNIT=VIO                           00130000
+//SYSIN    DD DISP=SHR,DSN=WMQ.MA99.C(MA95)                             00140005
