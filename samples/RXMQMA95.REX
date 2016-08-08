@@ -102,9 +102,11 @@ say 'Open Queue' Q2 'for Input Access, plus Attr manipulation'
 say
 
 RXMQTRACE = trace
-oo = mqoo_inquire+MQOO_INPUT_SHARED
-rcc = RXMQOPEN(Q2, oo , 'h2', 'ood.' )
- call sayrcc
+oo        = mqoo_inquire+MQOO_INPUT_SHARED
+iod.on    = Q2
+rcc       = RXMQOPEN(iod., oo , 'h2', 'ood.' )
+
+call sayrcc
 
 do w=1 to words(ood.zlist)
   wrd = word(ood.zlist,w)
